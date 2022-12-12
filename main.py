@@ -90,13 +90,12 @@ style.theme_use('clam')
 
 # Define a function for opening the file
 def open_file():
-   filename = filedialog.askopenfilename(title="Open a File", filetype=(("xlxs files", ".*xlsx"),
-("All Files", "*.")))
+   filename = filedialog.askopenfilename(title="Open a File", filetype=(("xlxs files", ".*xlsx"),))
 
    if filename:
       try:
          filename = r"{}".format(filename)
-         df = pd.read_excel(filename)
+         dataframe = pd.read_excel(filename)
       except ValueError:
          label.config(text="File could not be opened")
       except FileNotFoundError:
@@ -106,7 +105,7 @@ def open_file():
    clear_treeview()
 
    # Add new data in Treeview widget
-   tree["column"] = list(df.columns)
+   tree["column"] = list(dataframe.columns)
    tree["show"] = "headings"
 
    # For Headings iterate over the columns
@@ -114,8 +113,8 @@ def open_file():
       tree.heading(col, text=col)
 
    # Put Data in Rows
-   df_rows = df.to_numpy().tolist()
-   for row in df_rows:
+   dataframe_rows = dataframe.to_numpy().tolist()
+   for row in dataframe_rows:
         tree.insert("", "end", values=row)
 
    tree.pack()
@@ -134,7 +133,7 @@ win.config(menu=m)
 # Add Menu Dropdown
 file_menu = Menu(m, tearoff=False)
 m.add_cascade(label="Menu", menu=file_menu)
-file_menu.add_command(label="Open Spreadsheet", command=open_file)
+file_menu.add_command(label="Open data to link", command=open_file)
 
 # Add a Label widget to display the file content
 label = Label(win, text='')
