@@ -13,9 +13,10 @@ import yfinance as yf
 SET50 = {'BGRIM.BK','OSP.BK','CBG.BK','KBANK.BK','ADVANC.BK','TU.BK','CPN.BK','KTC.BK'
         ,'SCGP.BK','EGCO.BK','AOT.BK','CPF.BK','SCB.BK','KCE.BK','EA.BK','LH.BK','PTTGC.BK'
         ,'CRC.BK','JMART.BK','IVL.BK','IRPC.BK','BBL.BK','CPALL.BK','MINT.BK','GULF.BK','TIDLOR.BK'
-        ,'PTTEP.BK','BH.BK','BLA.BK','DTAC.BK'}
+        ,'PTTEP.BK','BH.BK','BLA.BK','DTAC.BK','OR.BK'}
     #because in yahoo_finance, it has to be with .bk because it's not in US
-        
+
+#define functions for making statistic table and graph        
 def getsettable(stock):
     '''making table that tell about the price of each stock including open close adjusted close etc'''
     if stock in SET50:
@@ -36,7 +37,7 @@ def getgraph(stock):
         datastock2["Datetime"] = datastock2.index
         datastock2 = datastock2[["Datetime", "Open", "High", "Low", 
                     "Close", "Adj Close", "Volume"]]
-        graph = px.line(datastock2, x='Datetime', y='Adj Close',  title = stock + ' ' + 'price graph with the time period selectors')
+        graph = px.line(datastock2, x='Datetime', y='Volume',  title = stock + ' ' + 'price graph with the time period selectors')
 
         graph.update_xaxes(
             rangeselector=dict(
@@ -62,11 +63,10 @@ while counter < 2:
     else:
         counter += 1
         input_for_graph = input()
-        if input_for_graph == 'open graph':
-            datastock2 = pd.DataFrame(getsettable(stock_name))
+        if input_for_graph == 'make data':
+            getsettable(stock_name)
             getgraph(stock_name)
         counter += 1
-
 
 #for open table via excel
 os.system("start EXCEL.EXE set50_table.xlsx")
@@ -75,7 +75,7 @@ os.system("start EXCEL.EXE set50_table.xlsx")
 win = Tk()
 
 # Set the size of the tkinter window
-win.geometry("700x350")
+win.geometry("3000x350")
 
 # Create a Frame
 frame = Frame(win)
@@ -84,6 +84,9 @@ frame.pack(pady=20)
 # Create an object of Style widget
 style = ttk.Style()
 style.theme_use('clam')
+
+# Create a Treeview widget
+tree = ttk.Treeview(frame)
 
 # Define a function for opening the file
 def open_file():
@@ -98,8 +101,6 @@ def open_file():
       except FileNotFoundError:
          label.config(text="File Not Found")
 
-   # Clear all the previous data in tree
-   clear_treeview()
 
    # Add new data in Treeview widget
    tree["column"] = list(dataframe.columns)
@@ -116,12 +117,6 @@ def open_file():
 
    tree.pack()
 
-# Clear the Treeview Widget
-def clear_treeview():
-   tree.delete(*tree.get_children())
-
-# Create a Treeview widget
-tree = ttk.Treeview(frame)
 
 # Add a Menu
 m = Menu(win)
