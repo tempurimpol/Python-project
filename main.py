@@ -10,15 +10,12 @@ from tkinter import filedialog
 import yfinance as yf
 
 #make sample set of SET50 to exclude the range
-SET50 = {'ADVANC','AWC','BANPU','BBL','BDMS','BEM','BGRIM','BH','BLA','BTS','CBG','CPALL',
-         'CPF','CPN','CRC','DTAC','EA','EGCO','GLOBAL','GPSC','GULF','HMPRO','INTUCH','IRPC','IVL',
-         'JMART','JMT','KBANK','KCE','KTB','KTC','LH','MINT','MTC','OR','OSP','PTT','PTTEP','PTTGC',
-         'SAWAD','SCB','SCC','SCGP','TIDLOR','TISCO','TOP','TRUE','TTB','TU'}
-
-for eachstock in SET50:
-    stock_name = eachstock + '.' + 'BK'
+SET50 = {'BGRIM.BK','OSP.BK','CBG.BK','KBANK.BK','ADVANC.BK','TU.BK','CPN.BK','KTC.BK'
+        ,'SCGP.BK','EGCO.BK','AOT.BK','CPF.BK','SCB.BK','KCE.BK','EA.BK','LH.BK','PTTGC.BK'
+        ,'CRC.BK','JMART.BK','IVL.BK','IRPC.BK','BBL.BK','CPALL.BK','MINT.BK','GULF.BK','TIDLOR.BK'
+        ,'PTTEP.BK','BH.BK','BLA.BK','DTAC.BK'}
     #because in yahoo_finance, it has to be with .bk because it's not in US
-
+        
 def getsettable(stock):
     '''making table that tell about the price of each stock including open close adjusted close etc'''
     if stock in SET50:
@@ -27,7 +24,7 @@ def getsettable(stock):
         tableset = pd.ExcelWriter('set50_table.xlsx')
         datastock.to_excel(tableset)
         tableset.save()
-        datastock.to_excel("set50_table.xlsx", sheet_name= stock + '.BK')
+        datastock.to_excel("set50_table.xlsx", sheet_name= stock)
         return datastock
         
 
@@ -38,7 +35,7 @@ def getgraph(stock):
         datastock2 = yf.download(tickers= stock)
         datastock2["Datetime"] = datastock2.index
         datastock2 = datastock2[["Datetime", "Open", "High", "Low", 
-                "Close", "Adj Close", "Volume"]]
+                    "Close", "Adj Close", "Volume"]]
         graph = px.line(datastock2, x='Datetime', y='Adj Close',  title = stock + ' ' + 'price graph with the time period selectors')
 
         graph.update_xaxes(
@@ -50,9 +47,9 @@ def getgraph(stock):
                     dict(count=6, label="6m", step="month", stepmode="backward"),
                     dict(count=1, label="1y", step="year", stepmode="backward"),
                     dict(step="all")
-                ])
+                    ])
+                )
             )
-        )
         graph.show()
 
 
